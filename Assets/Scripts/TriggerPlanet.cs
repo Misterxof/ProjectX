@@ -7,7 +7,6 @@ public class TriggerPlanet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
        // Debug.Log("Enter " + collision.ToString());
-       // Debug.Log("Enter " + collision.ToString());
         
     }
 
