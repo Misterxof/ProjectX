@@ -12,6 +12,7 @@ public class OrbitDebugDisplay : MonoBehaviour
     public CelestialBody centralBody;
     public float width = 100;
     public bool useThickLines;
+    private VirtualBody star;
 
     void Start()
     {
@@ -49,6 +50,20 @@ public class OrbitDebugDisplay : MonoBehaviour
                 referenceFrameIndex = i;
                 referenceBodyInitialPosition = virtualBodies[i].position;
             }
+
+            if (virtualBodies[i].spaceObjectType == SpaceObjectType.Star) 
+                star = virtualBodies[i];
+        }
+
+        // Calculate sphereOfInfluence of the planets
+        for (int i = 0; i < virtualBodies.Length; i++)
+        {
+            if (virtualBodies[i].spaceObjectType == SpaceObjectType.Planet)
+            {
+                float distance = ((star.position - virtualBodies[i].position) * 10000).magnitude;
+                virtualBodies[i].sphereOfInfluence = CalculationUtils.CalculateSphereOfInfluence(distance, virtualBodies[i].mass, star.mass) / 100;
+                //Debug.Log(virtualBodies[i].bodyName + " SOI = " + virtualBodies[i].sphereOfInfluence);
+            }
         }
 
         // Simulate
@@ -82,7 +97,7 @@ public class OrbitDebugDisplay : MonoBehaviour
         // Draw paths
         for (int bodyIndex = 0; bodyIndex < virtualBodies.Length; bodyIndex++)
         {
-            var pathColour = Color.red; //
+            var pathColour = bodies[bodyIndex].gameObject.GetComponentInChildren<SpriteRenderer>().color;
 
             if (useThickLines)
             {
@@ -121,9 +136,14 @@ public class OrbitDebugDisplay : MonoBehaviour
             {
                 continue;
             }
-            Vector3 forceDir = (virtualBodies[j].position - virtualBodies[i].position).normalized;
-            float sqrDst = (virtualBodies[j].position - virtualBodies[i].position).sqrMagnitude;
+            Vector3 forceDir = ((virtualBodies[j].position - virtualBodies[i].position)*10000).normalized;
+            float sqrDst = ((virtualBodies[j].position - virtualBodies[i].position)*10000).sqrMagnitude;
             acceleration += forceDir * CalculationUtils.G * virtualBodies[j].mass / sqrDst;
+            //Debug.Log("X " + virtualBodies[j].position.x*10000);
+            //Debug.Log("X " + virtualBodies[i].position.x * 10000);
+            //Debug.Log("Sqrt " + sqrDst);
+            //float distance = CalculationUtils.CalculateDistanceBetweenTwoPoints(virtualBodies[j].position.x, virtualBodies[j].position.y, virtualBodies[i].position.x, virtualBodies[i].position.y);
+            //Debug.Log("Distance = " + distance*distance + " km");
         }
         return acceleration;
     }
@@ -136,7 +156,10 @@ public class OrbitDebugDisplay : MonoBehaviour
         for (int bodyIndex = 0; bodyIndex < bodies.Length; bodyIndex++)
         {
             var lineRenderer = bodies[bodyIndex].gameObject.GetComponentInChildren<LineRenderer>();
-            lineRenderer.positionCount = 0;
+            if (lineRenderer != null)
+            {
+                lineRenderer.positionCount = 0;
+            }
         }
     }
 
@@ -153,12 +176,17 @@ public class OrbitDebugDisplay : MonoBehaviour
         public Vector3 position;
         public Vector3 velocity;
         public float mass;
+        public float sphereOfInfluence;
+        public SpaceObjectType spaceObjectType;
+        public string bodyName;
 
         public VirtualBody(CelestialBody body)
         {
             position = body.transform.position;
             velocity = body.initialVelocity;
             mass = body.mass;
+            spaceObjectType = body.spaceObjectType;
+            bodyName = body.bodyName;
         }
     }
 }

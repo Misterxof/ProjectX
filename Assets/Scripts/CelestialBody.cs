@@ -10,32 +10,32 @@ public class CelestialBody : GravityObject
     public float surfaceGravity;
     public Vector3 initialVelocity;
     public string bodyName = "Unnamed";
-    Transform meshHolder;
 
     public Vector3 velocity { get; private set; }
-    public float mass { get; private set; }
+
+    [ReadOnly]
+    [SerializeField]
+    public float mass;
+
     Rigidbody rb;
+
+    [ReadOnly]
+    public float sphereOfInfluence = 0f;
+
+    public SpaceObjectType spaceObjectType;
+
+    [ReadOnly]
+    public GameObject influenseSphere;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        Debug.Log(rb.position.x);
-        rb.mass = mass;
+       // rb.mass = mass;
         velocity = initialVelocity;
-    }
-
-    public void UpdateVelocity(CelestialBody[] allBodies, float timeStep)
-    {
-        foreach (var otherBody in allBodies)
+        
+        if (mass < 1f)
         {
-            if (otherBody != this)
-            {
-                float sqrDst = (otherBody.rb.position - rb.position).sqrMagnitude;
-                Vector3 forceDir = (otherBody.rb.position - rb.position).normalized;
-
-                Vector3 acceleration = forceDir * CalculationUtils.G * otherBody.mass / sqrDst;
-                velocity += acceleration * timeStep;
-            }
+            mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtils.G);
         }
     }
 
@@ -47,12 +47,16 @@ public class CelestialBody : GravityObject
     public void UpdatePosition(float timeStep)
     {
         rb.MovePosition(rb.position + velocity * timeStep);
-
+        if(bodyName == "Earth")
+        {
+            Debug.Log(influenseSphere.transform.position);
+        }
     }
 
     void OnValidate()
     {
-        mass = surfaceGravity * radius * radius / CalculationUtils.G;
+        mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtils.G);
+       // mass = ((surfaceGravity) * radius * radius / CalculationUtils.G);
         //meshHolder = transform.GetChild(0);
        // meshHolder.localScale = Vector3.one * radius;
         gameObject.name = bodyName;
@@ -72,6 +76,12 @@ public class CelestialBody : GravityObject
         {
             return rb.position;
         }
+    }
+
+    public void SetInfluenseSphere(GameObject influenseSphere)
+    {
+        this.influenseSphere = influenseSphere;
+        this.influenseSphere.transform.parent = transform;
     }
 
 }

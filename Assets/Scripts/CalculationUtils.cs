@@ -4,9 +4,11 @@ using UnityEngine;
 
 public static class CalculationUtils
 {
-    public static float G = 6.67408e-11f;
+    public static float G = 6.67408e-20f;   // km^3/kg s^2
+    //public static float G = 6.67408e-11f;   // m^3/kg s^2
     //public static float G = 0.0001f;
-    public const float T = 1f;
+    //public static float G = 0.0006674f;
+    public const float T = 100f;
 
     public static float CalculateDistanceBetweenTwoPoints(float x1, float y1, float x2, float y2)
     {
@@ -18,6 +20,12 @@ public static class CalculationUtils
     {
         //float result = G * M * (xP * 1000 - xS * 1000) / Mathf.Pow(r * 1000, 3);
         float result = G * M  / r * 1000;
+        return result;
+    }
+
+    public static float CalculateSphereOfInfluence(float r, float m, float M)
+    {
+        float result = r * Mathf.Pow((m / M), (2f / 5f));
         return result;
     }
 }

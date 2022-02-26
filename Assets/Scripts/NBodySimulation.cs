@@ -6,13 +6,44 @@ public class NBodySimulation : MonoBehaviour
 {
     CelestialBody[] bodies;
     static NBodySimulation instance;
+    private CelestialBody star;
 
     void Awake()
     {
-
         bodies = FindObjectsOfType<CelestialBody>();
         Time.fixedDeltaTime = 0.01f;
         Debug.Log("Setting fixedDeltaTime to: " + CalculationUtils.T);
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < bodies.Length; i++)
+        {
+            if (bodies[i].spaceObjectType == SpaceObjectType.Star)
+            {
+                star = bodies[i];
+                break;
+            }
+        }
+
+        for (int i = 0; i < bodies.Length; i++)
+        {
+            if (bodies[i].spaceObjectType == SpaceObjectType.Planet)
+            {
+                float distance = ((star.Position - bodies[i].Position) * 10000).magnitude;
+                float sphereOfInfluence = CalculationUtils.CalculateSphereOfInfluence(distance, bodies[i].mass, star.mass) / 1000;
+                bodies[i].sphereOfInfluence = sphereOfInfluence;
+                GameObject influenseSphere = new GameObject("Influense Sphere");
+                influenseSphere.transform.position = bodies[i].Position;
+                influenseSphere.AddComponent<CircleCollider2D>();
+                influenseSphere.GetComponent<CircleCollider2D>().radius = sphereOfInfluence;
+                influenseSphere.GetComponent<CircleCollider2D>().isTrigger = true;
+                influenseSphere.AddComponent<InfluenceTrigger>();
+
+                bodies[i].SetInfluenseSphere(influenseSphere);
+                Debug.Log(bodies[i].bodyName + " SOI = " + bodies[i].sphereOfInfluence);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -27,6 +58,7 @@ public class NBodySimulation : MonoBehaviour
         for (int i = 0; i < bodies.Length; i++)
         {
             bodies[i].UpdatePosition(CalculationUtils.T);
+           // bodies[i].influenseSphere.transform.position = bodies[i].Position;
         }
 
     }
@@ -38,8 +70,8 @@ public class NBodySimulation : MonoBehaviour
         {
             if (body != ignoreBody)
             {
-                float sqrDst = (body.Position - point).sqrMagnitude;
-                Vector3 forceDir = (body.Position - point).normalized;
+                float sqrDst = ((body.Position - point) * 10000).sqrMagnitude;    // r^2
+                Vector3 forceDir = ((body.Position - point) * 10000).normalized;  // Vector3
                 acceleration += forceDir * CalculationUtils.G * body.mass / sqrDst;
             }
         }
