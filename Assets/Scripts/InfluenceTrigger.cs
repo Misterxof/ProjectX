@@ -7,7 +7,6 @@ public class InfluenceTrigger : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Enter " + collision.ToString());
-        
     }
 
     private void OnTriggerStay2D(Collider2D collision)

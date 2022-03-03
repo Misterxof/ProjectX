@@ -28,4 +28,12 @@ public static class CalculationUtils
         float result = r * Mathf.Pow((m / M), (2f / 5f));
         return result;
     }
+
+    public static float CalculateCratetrRadius(float velocity, float densityAsteroid, float densityTarget, float g, float radiusAsteroid)
+    {
+        float deltaDensity = densityAsteroid / densityTarget;
+        float result = Mathf.Pow(Mathf.Pow(velocity * 1000, 2) / g * deltaDensity, (1f / 4f)) * Mathf.Pow(radiusAsteroid, (3f / 4f));
+        Debug.Log(result / 1000 + " km");
+        return result / 1000;
+    }
 }
