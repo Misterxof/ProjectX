@@ -33,7 +33,13 @@ public static class CalculationUtils
     {
         float deltaDensity = densityAsteroid / densityTarget;
         float result = Mathf.Pow(Mathf.Pow(velocity * 1000, 2) / g * deltaDensity, (1f / 4f)) * Mathf.Pow(radiusAsteroid, (3f / 4f));
-        Debug.Log(result / 1000 + " km");
         return result / 1000;
+    }
+
+    public static Vector3 CalculateNewPointByDepth(Vector3 firstPoint, Vector3 secondPoint, float depth)
+    {
+        float r = (firstPoint - secondPoint).magnitude;
+        Vector3 result = secondPoint + (firstPoint - secondPoint) * (depth / r);
+        return result;
     }
 }
