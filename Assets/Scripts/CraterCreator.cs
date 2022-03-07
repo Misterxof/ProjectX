@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CraterCreator : MonoBehaviour
@@ -73,10 +74,41 @@ public class CraterCreator : MonoBehaviour
         Debug.Log("List size : " + insideVertices.Count);
         Debug.Log("B List size : " + beforeVertices.Count);
         Debug.Log("A List size : " + afterVertices.Count);
-        Debug.Log("test New point : " + CalculationUtils.CalculateNewPointByDepth(new Vector3(2,0,0), new Vector3(0,0,0), 1));
+        Debug.Log("test New point : " + CalculationUtils.CalculateNewPointByDepth(new Vector3(2, 0, 0), new Vector3(0, 0, 0), 1));
         Debug.Log("New point : " + CalculationUtils.CalculateNewPointByDepth(gameObject.transform.position * scale, middleVertex.Item2 * scale, craterDepth));
 
-        allVerticesArray[128] = CalculationUtils.CalculateNewPointByDepth(gameObject.transform.position * scale, middleVertex.Item2 * scale, craterDepth) / scale;
+        allVerticesArray[middleVertex.Item1] = CalculationUtils.CalculateNewPointByDepth(gameObject.transform.position * scale, middleVertex.Item2 * scale, craterDepth) / scale;
+        float craterDepthStepBefore = craterDepth / (beforeVertices.Count + 1);
+        float currentCraterDepth = 0f;
+
+        foreach (var valuePair in beforeVertices)
+        {
+            currentCraterDepth += craterDepthStepBefore;
+            Debug.Log("1 Depth : " + currentCraterDepth);
+            //if (valuePair.Equals(beforeVertices.First()))
+            //{
+            //    Debug.Log("FIRST : " + beforeVertices.First());
+            //     *** FOR CRATER BORDER ***
+            //} else{}
+            Vector3 virtualCentralPoint = CalculationUtils.CalculateNewVirtualCentralPoint(valuePair.Value, middleVertex.Item2, gameObject.transform.position);
+            allVerticesArray[valuePair.Key] = CalculationUtils.CalculateNewPointByDepth(virtualCentralPoint * scale, valuePair.Value * scale, currentCraterDepth) / scale;
+        }
+
+        foreach (var valuePair in afterVertices)
+        {
+            Debug.Log("2 Depth : " + currentCraterDepth);
+            //if (valuePair.Equals(afterVertices.Last()))
+            //{
+            //    Debug.Log("LAST : " + afterVertices.Last());
+            //     *** FOR CRATER BORDER ***
+            //}
+            //else{}
+            Vector3 virtualCentralPoint = CalculationUtils.CalculateNewVirtualCentralPoint(valuePair.Value, middleVertex.Item2, gameObject.transform.position);
+            allVerticesArray[valuePair.Key] = CalculationUtils.CalculateNewPointByDepth(virtualCentralPoint * scale, valuePair.Value * scale, currentCraterDepth) / scale;
+
+            currentCraterDepth -= craterDepthStepBefore;
+        }
+
         mesh.vertices = allVerticesArray;
         mesh.RecalculateBounds();
         Debug.Log("allpoints : " + allVerticesArray[128]);

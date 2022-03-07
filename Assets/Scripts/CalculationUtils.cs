@@ -42,4 +42,11 @@ public static class CalculationUtils
         Vector3 result = secondPoint + (firstPoint - secondPoint) * (depth / r);
         return result;
     }
+
+    public static Vector3 CalculateNewVirtualCentralPoint(Vector3 point, Vector3 collisionPoint,Vector3 centralPoint)
+    {
+        Vector3 offsetPoint = point - collisionPoint;   // offcet from middle(collision) point
+        Vector3 result = centralPoint + offsetPoint;    // new virtual central point on one line with point
+        return result;
+    }
 }
