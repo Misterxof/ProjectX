@@ -35,7 +35,7 @@ public class CelestialBody : GravityObject
         
         if (mass < 1f)
         {
-            mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtils.G);
+            mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtilsMath.G);
         }
     }
 
@@ -55,8 +55,8 @@ public class CelestialBody : GravityObject
 
     void OnValidate()
     {
-        mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtils.G);
-       // mass = ((surfaceGravity) * radius * radius / CalculationUtils.G);
+        mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtilsMath.G);
+       // mass = ((surfaceGravity) * radius * radius / CalculationUtilsMath.G);
         //meshHolder = transform.GetChild(0);
        // meshHolder.localScale = Vector3.one * radius;
         gameObject.name = bodyName;

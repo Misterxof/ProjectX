@@ -70,7 +70,7 @@ public class OrbitDebugDisplay : MonoBehaviour
             if (virtualBodies[i].spaceObjectType == SpaceObjectType.Planet)
             {
                 float distance = ((star.position - virtualBodies[i].position) * 10000).magnitude;
-                virtualBodies[i].sphereOfInfluence = CalculationUtils.CalculateSphereOfInfluence(distance, virtualBodies[i].mass, star.mass) / 100;
+                virtualBodies[i].sphereOfInfluence = CalculationUtilsMath.CalculateSphereOfInfluence(distance, virtualBodies[i].mass, star.mass) / 100;
                 //Debug.Log(virtualBodies[i].bodyName + " SOI = " + virtualBodies[i].sphereOfInfluence);
             }
         }
@@ -147,11 +147,11 @@ public class OrbitDebugDisplay : MonoBehaviour
             }
             Vector3 forceDir = ((virtualBodies[j].position - virtualBodies[i].position)*10000).normalized;
             float sqrDst = ((virtualBodies[j].position - virtualBodies[i].position)*10000).sqrMagnitude;
-            acceleration += forceDir * CalculationUtils.G * virtualBodies[j].mass / sqrDst;
+            acceleration += forceDir * CalculationUtilsMath.G * virtualBodies[j].mass / sqrDst;
             //Debug.Log("X " + virtualBodies[j].position.x*10000);
             //Debug.Log("X " + virtualBodies[i].position.x * 10000);
             //Debug.Log("Sqrt " + sqrDst);
-            //float distance = CalculationUtils.CalculateDistanceBetweenTwoPoints(virtualBodies[j].position.x, virtualBodies[j].position.y, virtualBodies[i].position.x, virtualBodies[i].position.y);
+            //float distance = CalculationUtilsMath.CalculateDistanceBetweenTwoPoints(virtualBodies[j].position.x, virtualBodies[j].position.y, virtualBodies[i].position.x, virtualBodies[i].position.y);
             //Debug.Log("Distance = " + distance*distance + " km");
         }
         return acceleration;
@@ -176,7 +176,7 @@ public class OrbitDebugDisplay : MonoBehaviour
     {
         if (usePhysicsTimeStep)
         {
-            timeStep = CalculationUtils.T;
+            timeStep = CalculationUtilsMath.T;
         }
     }
 

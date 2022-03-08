@@ -54,13 +54,13 @@ public class Planet : MonoBehaviour
         {
             sun = GameObject.Find("Sun");
 
-            distance = CalculationUtils.CalculateDistanceBetweenTwoPoints(transform.position.x, transform.position.y, sun.transform.position.x, sun.transform.position.y);
+            distance = CalculationUtilsMath.CalculateDistanceBetweenTwoPoints(transform.position.x, transform.position.y, sun.transform.position.x, sun.transform.position.y);
             Debug.Log("Distance = " + distance + " km");
 
-            accelerationX = CalculationUtils.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.x, sun.transform.position.x, distance);
+            accelerationX = CalculationUtilsMath.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.x, sun.transform.position.x, distance);
             Debug.Log("Acceleration X = " + accelerationX + "m/c^2");
 
-            accelerationY = CalculationUtils.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.y, sun.transform.position.y, distance);
+            accelerationY = CalculationUtilsMath.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.y, sun.transform.position.y, distance);
             Debug.Log("Acceleration Y = " + accelerationY + "m/c^2");
 
             //float x = 1000 * Mathf.Cos(Mathf.Deg2Rad * 0f);
@@ -93,13 +93,13 @@ public class Planet : MonoBehaviour
         if (planet)
         {
             i++;
-            //distance = CalculationUtils.CalculateDistanceBetweenTwoPoints(transform.position.x, transform.position.y, sun.transform.position.x, sun.transform.position.y);
+            //distance = CalculationUtilsMath.CalculateDistanceBetweenTwoPoints(transform.position.x, transform.position.y, sun.transform.position.x, sun.transform.position.y);
             //Debug.Log("Distance = " + distance + " km");
 
-            //accelerationX = CalculationUtils.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.x, sun.transform.position.x, distance);
+            //accelerationX = CalculationUtilsMath.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.x, sun.transform.position.x, distance);
             //Debug.Log("Acceleration X = " + accelerationX + "m/c^2");
 
-            //accelerationY = CalculationUtils.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.y, sun.transform.position.y, distance);
+            //accelerationY = CalculationUtilsMath.CalculateAcceleration(sun.GetComponent<Planet>().mass, transform.position.y, sun.transform.position.y, distance);
             //Debug.Log("Acceleration Y = " + accelerationY + "m/c^2");
 
             //speedX += T * accelerationX;
@@ -113,9 +113,9 @@ public class Planet : MonoBehaviour
             float sqrDst = (sun.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position).sqrMagnitude;
             Vector2 forceDir = (sun.GetComponent<Rigidbody2D>().position - GetComponent<Rigidbody2D>().position).normalized;
 
-            mass = 10 * 300 * 300 / CalculationUtils.G;
+            mass = 10 * 300 * 300 / CalculationUtilsMath.G;
 
-            acceleration = forceDir * CalculationUtils.G * mass / sqrDst;
+            acceleration = forceDir * CalculationUtilsMath.G * mass / sqrDst;
             velocity += acceleration * T;
 
             GetComponent<Rigidbody2D>().MovePosition(GetComponent<Rigidbody2D>().position + velocity * T);

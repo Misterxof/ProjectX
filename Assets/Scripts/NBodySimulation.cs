@@ -12,7 +12,7 @@ public class NBodySimulation : MonoBehaviour
     {
         bodies = FindObjectsOfType<CelestialBody>();
         Time.fixedDeltaTime = 0.01f;
-        Debug.Log("Setting fixedDeltaTime to: " + CalculationUtils.T);
+        Debug.Log("Setting fixedDeltaTime to: " + CalculationUtilsMath.T);
     }
 
     private void Start()
@@ -31,7 +31,7 @@ public class NBodySimulation : MonoBehaviour
             if (bodies[i].spaceObjectType == SpaceObjectType.Planet)
             {
                 float distance = ((star.Position - bodies[i].Position) * 10000).magnitude;
-                float sphereOfInfluence = CalculationUtils.CalculateSphereOfInfluence(distance, bodies[i].mass, star.mass) / 1000;
+                float sphereOfInfluence = CalculationUtilsMath.CalculateSphereOfInfluence(distance, bodies[i].mass, star.mass) / 1000;
                 bodies[i].sphereOfInfluence = sphereOfInfluence;
                 GameObject influenseSphere = new GameObject("Influense Sphere");
                 influenseSphere.transform.position = bodies[i].Position;
@@ -51,13 +51,13 @@ public class NBodySimulation : MonoBehaviour
         for (int i = 0; i < bodies.Length; i++)
         {
             Vector3 acceleration = CalculateAcceleration(bodies[i].Position, bodies[i]);
-            bodies[i].UpdateVelocity(acceleration, CalculationUtils.T);
+            bodies[i].UpdateVelocity(acceleration, CalculationUtilsMath.T);
             //bodies[i].UpdateVelocity (bodies, Universe.physicsTimeStep);
         }
 
         for (int i = 0; i < bodies.Length; i++)
         {
-            bodies[i].UpdatePosition(CalculationUtils.T);
+            bodies[i].UpdatePosition(CalculationUtilsMath.T);
            // bodies[i].influenseSphere.transform.position = bodies[i].Position;
         }
 
@@ -72,7 +72,7 @@ public class NBodySimulation : MonoBehaviour
             {
                 float sqrDst = ((body.Position - point) * 10000).sqrMagnitude;    // r^2
                 Vector3 forceDir = ((body.Position - point) * 10000).normalized;  // Vector3
-                acceleration += forceDir * CalculationUtils.G * body.mass / sqrDst;
+                acceleration += forceDir * CalculationUtilsMath.G * body.mass / sqrDst;
             }
         }
 

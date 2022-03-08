@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class CalculationUtils
+public static class CalculationUtilsMath
 {
     public static float G = 6.67408e-20f;   // km^3/kg s^2
     //public static float G = 6.67408e-11f;   // m^3/kg s^2
@@ -34,19 +34,5 @@ public static class CalculationUtils
         float deltaDensity = densityAsteroid / densityTarget;
         float result = Mathf.Pow(Mathf.Pow(velocity * 1000, 2) / g * deltaDensity, (1f / 4f)) * Mathf.Pow(radiusAsteroid, (3f / 4f));
         return result / 1000;
-    }
-
-    public static Vector3 CalculateNewPointByDepth(Vector3 firstPoint, Vector3 secondPoint, float depth)
-    {
-        float r = (firstPoint - secondPoint).magnitude;
-        Vector3 result = secondPoint + (firstPoint - secondPoint) * (depth / r);
-        return result;
-    }
-
-    public static Vector3 CalculateNewVirtualCentralPoint(Vector3 point, Vector3 collisionPoint,Vector3 centralPoint)
-    {
-        Vector3 offsetPoint = point - collisionPoint;   // offcet from middle(collision) point
-        Vector3 result = centralPoint + offsetPoint;    // new virtual central point on one line with point
-        return result;
     }
 }

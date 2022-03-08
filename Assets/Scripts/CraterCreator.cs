@@ -9,38 +9,86 @@ public class CraterCreator : MonoBehaviour
     public float mass = 1f;
     public float radius = 1f;
 
-    [ReadOnly]
-    public float craterDiametr = 1f;
-
-    [ReadOnly]
-    public float craterDepth = 1f;
-
     private MeshFilter meshFilter;
-
-    private Vector3[] allVerticesArray;
-    private Tuple<int, Vector3> middleVertex;
-    public GameObject gameObject;
-    public GameObject gameObject2;
-    BoxCollider2D m_Collider;
-    Mesh mesh;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_Collider = GetComponent<BoxCollider2D>();
-        Debug.Log(m_Collider);
-
         meshFilter = gameObject.GetComponent<MeshFilter>();
-        mesh = meshFilter.mesh;
-        allVerticesArray = meshFilter.mesh.vertices;
-        middleVertex = new Tuple<int, Vector3>(128, allVerticesArray[128]);
-        Debug.Log(middleVertex);
+    }
 
-        craterDiametr = CalculationUtils.CalculateCratetrRadius(17, 2600, 2600, 9.8f, 100);
-        craterDepth = 0.4f * craterDiametr;
+    // Update is called once per frame
+    void Update()
+    {
+    }
+
+    public void OnCollision(Collision2D collision)
+    {
+        Debug.Log("Collision");
+        Debug.Log("Enter " + collision.contacts[0].point.x + "    " + collision.contacts[0].point.y);
+
+        Vector3 collision2DPoint = collision.contacts[0].point;
+        float craterDiametr = CalculationUtilsMath.CalculateCratetrRadius(17, 2600, 2600, 9.8f, 100);
+        float craterDepth = 0.4f * craterDiametr;
+        float scale = transform.localScale.x;
         Debug.Log(craterDiametr + " km");
         Debug.Log(craterDepth + " km");
-        Dictionary<int, Vector3> insideVertices = new Dictionary<int, Vector3>();
+
+        Mesh mesh = meshFilter.mesh;
+        Vector3[] allVerticesArray = meshFilter.mesh.vertices;
+        Tuple<int, Vector3> middleVertex = FindCollisionVertex(collision2DPoint, allVerticesArray, scale);
+        Debug.Log(middleVertex);
+
+        GameObject verticesFinderSquare = CreateVerticesFinderSquare(middleVertex.Item2, craterDiametr, craterDepth, scale);
+        BoxCollider2D boxCollider2D = verticesFinderSquare.GetComponent<BoxCollider2D>();
+        Tuple<Dictionary<int, Vector3>, Dictionary<int, Vector3>> innerVertices = FindImpuctVertices(boxCollider2D, allVerticesArray, middleVertex.Item2);
+
+        Dictionary<int, Vector3> beforeVertices = innerVertices.Item1;
+        Dictionary<int, Vector3> afterVertices = innerVertices.Item2;
+
+        Debug.Log("B List size : " + beforeVertices.Count);
+        Debug.Log("A List size : " + afterVertices.Count);
+        Debug.Log("New point : " + CalculationUtilsVectors.CalculateNewPointByDepth(transform.position * scale, middleVertex.Item2 * scale, craterDepth));
+
+        Vector3[] newAllVerticesPositions = CalculationUtilsVectors.CalculateNewVerticesPositions(transform.position, allVerticesArray, middleVertex,
+            beforeVertices, afterVertices, craterDepth, scale);
+
+        mesh.vertices = newAllVerticesPositions;
+        mesh.RecalculateBounds();
+        Destroy(verticesFinderSquare);
+    }
+
+    private GameObject CreateVerticesFinderSquare(Vector3 collision2DPoint, float diametr, float depth, float scale)
+    {
+        GameObject verticesFinderSquare = new GameObject("VerticesFinderSquare");
+        verticesFinderSquare.transform.position = collision2DPoint * scale;
+        verticesFinderSquare.AddComponent<BoxCollider2D>();
+        verticesFinderSquare.GetComponent<BoxCollider2D>().size = new Vector2(diametr, depth);
+
+        return verticesFinderSquare;
+    }
+
+    private Tuple<int, Vector3> FindCollisionVertex(Vector3 collision2DPoint, Vector3[] allVerticesArray, float scale)
+    {
+        float minDistance = 10000f;
+        Tuple<int, Vector3> closestPoint = new Tuple<int, Vector3>(0, allVerticesArray[0]);
+
+        for (int i = 0; i < allVerticesArray.Length; i++)
+        {
+            float distance = (collision2DPoint - allVerticesArray[i] * scale).magnitude;
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestPoint = new Tuple<int, Vector3>(i, allVerticesArray[i]);
+            }
+        }
+
+        return closestPoint;
+    }
+
+    private Tuple<Dictionary<int, Vector3>, Dictionary<int, Vector3>> FindImpuctVertices(BoxCollider2D boxCollider2D, Vector3[] allVerticesArray, Vector3 middleVertex)
+    {
         Dictionary<int, Vector3> beforeVertices = new Dictionary<int, Vector3>();
         Dictionary<int, Vector3> afterVertices = new Dictionary<int, Vector3>();
         bool middleVertexFlag = false;
@@ -48,12 +96,11 @@ public class CraterCreator : MonoBehaviour
         for (int i = 0; i < allVerticesArray.Length; i++)
         {
             // Debug.Log(allVerticesArray[i]);
-            if (m_Collider.bounds.Contains(allVerticesArray[i] * gameObject.transform.localScale.x))
+            if (boxCollider2D.bounds.Contains(allVerticesArray[i] * gameObject.transform.localScale.x))
             {
                 Debug.Log("" + i + " Bounds contain the point : " + allVerticesArray[i]);
-                insideVertices.Add(i, allVerticesArray[i]);
 
-                if (allVerticesArray[i].Equals(middleVertex.Item2))
+                if (allVerticesArray[i].Equals(middleVertex))
                 {
                     middleVertexFlag = true;
                 }
@@ -70,54 +117,9 @@ public class CraterCreator : MonoBehaviour
                 }
             }
         }
-        float scale = gameObject.transform.localScale.x;
-        Debug.Log("List size : " + insideVertices.Count);
-        Debug.Log("B List size : " + beforeVertices.Count);
-        Debug.Log("A List size : " + afterVertices.Count);
-        Debug.Log("test New point : " + CalculationUtils.CalculateNewPointByDepth(new Vector3(2, 0, 0), new Vector3(0, 0, 0), 1));
-        Debug.Log("New point : " + CalculationUtils.CalculateNewPointByDepth(gameObject.transform.position * scale, middleVertex.Item2 * scale, craterDepth));
 
-        allVerticesArray[middleVertex.Item1] = CalculationUtils.CalculateNewPointByDepth(gameObject.transform.position * scale, middleVertex.Item2 * scale, craterDepth) / scale;
-        float craterDepthStepBefore = craterDepth / (beforeVertices.Count + 1);
-        float currentCraterDepth = 0f;
-
-        foreach (var valuePair in beforeVertices)
-        {
-            currentCraterDepth += craterDepthStepBefore;
-            Debug.Log("1 Depth : " + currentCraterDepth);
-            //if (valuePair.Equals(beforeVertices.First()))
-            //{
-            //    Debug.Log("FIRST : " + beforeVertices.First());
-            //     *** FOR CRATER BORDER ***
-            //} else{}
-            Vector3 virtualCentralPoint = CalculationUtils.CalculateNewVirtualCentralPoint(valuePair.Value, middleVertex.Item2, gameObject.transform.position);
-            allVerticesArray[valuePair.Key] = CalculationUtils.CalculateNewPointByDepth(virtualCentralPoint * scale, valuePair.Value * scale, currentCraterDepth) / scale;
-        }
-
-        foreach (var valuePair in afterVertices)
-        {
-            Debug.Log("2 Depth : " + currentCraterDepth);
-            //if (valuePair.Equals(afterVertices.Last()))
-            //{
-            //    Debug.Log("LAST : " + afterVertices.Last());
-            //     *** FOR CRATER BORDER ***
-            //}
-            //else{}
-            Vector3 virtualCentralPoint = CalculationUtils.CalculateNewVirtualCentralPoint(valuePair.Value, middleVertex.Item2, gameObject.transform.position);
-            allVerticesArray[valuePair.Key] = CalculationUtils.CalculateNewPointByDepth(virtualCentralPoint * scale, valuePair.Value * scale, currentCraterDepth) / scale;
-
-            currentCraterDepth -= craterDepthStepBefore;
-        }
-
-        mesh.vertices = allVerticesArray;
-        mesh.RecalculateBounds();
-        Debug.Log("allpoints : " + allVerticesArray[128]);
-        Debug.Log("mesh allpoints : " + mesh.vertices[128]);
-        Debug.Log("meshFilter allpoints : " + meshFilter.mesh.vertices[128]);
+        return new Tuple<Dictionary<int, Vector3>, Dictionary<int, Vector3>>(beforeVertices, afterVertices);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
+    
 }
