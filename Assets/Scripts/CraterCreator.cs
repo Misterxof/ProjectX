@@ -11,10 +11,23 @@ public class CraterCreator : MonoBehaviour
 
     private MeshFilter meshFilter;
 
+    PolygonCollider2D polygonCollider2D;
+
     // Start is called before the first frame update
     void Start()
     {
         meshFilter = gameObject.GetComponent<MeshFilter>();
+        gameObject.AddComponent<PolygonCollider2D>();
+        polygonCollider2D = gameObject.GetComponent<PolygonCollider2D>();
+        Vector3[] vertices = meshFilter.mesh.vertices;
+        Vector2[] vec = new Vector2[vertices.Length];
+   
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vec[i] = new Vector2(vertices[i].x, vertices[i].y);
+        }
+        polygonCollider2D.SetPath(0, vec);
+        
     }
 
     // Update is called once per frame
@@ -28,7 +41,7 @@ public class CraterCreator : MonoBehaviour
         Debug.Log("Enter " + collision.contacts[0].point.x + "    " + collision.contacts[0].point.y);
 
         Vector3 collision2DPoint = collision.contacts[0].point;
-        float craterDiametr = CalculationUtilsMath.CalculateCratetrRadius(17, 2600, 2600, 9.8f, 100);
+        float craterDiametr = CalculationUtilsMath.CalculateCratetrRadius(17, 2600, 2600, 9.8f, 100);   // some formula incorrectness or misinterpretation in the source => radius = diametr
         float craterDepth = 0.4f * craterDiametr;
         float scale = transform.localScale.x;
         Debug.Log(craterDiametr + " km");
@@ -36,10 +49,14 @@ public class CraterCreator : MonoBehaviour
 
         Mesh mesh = meshFilter.mesh;
         Vector3[] allVerticesArray = meshFilter.mesh.vertices;
-        Tuple<int, Vector3> middleVertex = FindCollisionVertex(collision2DPoint, allVerticesArray, scale);
+        Tuple<int, Vector3> middleVertex = FindCollisionVertex(collision2DPoint, allVerticesArray, scale);  // collision vertex
         Debug.Log(middleVertex);
 
-        GameObject verticesFinderSquare = CreateVerticesFinderSquare(middleVertex.Item2, craterDiametr, craterDepth, scale);
+        var angle = CalculationUtilsVectors.CalculateAngleBetweenTwoVectors(middleVertex.Item2, transform.position) + 90f;  // angle for verticesFinderSquare rotation, 90f for correction
+
+        Debug.Log("ANGLE " + angle);
+
+        GameObject verticesFinderSquare = CreateVerticesFinderSquare(middleVertex.Item2, craterDiametr, craterDepth, angle, scale);
         BoxCollider2D boxCollider2D = verticesFinderSquare.GetComponent<BoxCollider2D>();
         Tuple<Dictionary<int, Vector3>, Dictionary<int, Vector3>> innerVertices = FindImpuctVertices(boxCollider2D, allVerticesArray, middleVertex.Item2);
 
@@ -56,12 +73,15 @@ public class CraterCreator : MonoBehaviour
         mesh.vertices = newAllVerticesPositions;
         mesh.RecalculateBounds();
         Destroy(verticesFinderSquare);
+
+        polygonCollider2D.SetPath(0, CalculationUtilsVectors.ConvertVector3ArraytoVector2Array(newAllVerticesPositions));   // update polygonCollider2D
     }
 
-    private GameObject CreateVerticesFinderSquare(Vector3 collision2DPoint, float diametr, float depth, float scale)
+    private GameObject CreateVerticesFinderSquare(Vector3 collision2DPoint, float diametr, float depth, float angle, float scale)
     {
         GameObject verticesFinderSquare = new GameObject("VerticesFinderSquare");
         verticesFinderSquare.transform.position = collision2DPoint * scale;
+        verticesFinderSquare.transform.Rotate(0, 0, angle);
         verticesFinderSquare.AddComponent<BoxCollider2D>();
         verticesFinderSquare.GetComponent<BoxCollider2D>().size = new Vector2(diametr, depth);
 

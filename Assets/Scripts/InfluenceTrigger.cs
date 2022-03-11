@@ -21,6 +21,13 @@ public class InfluenceTrigger : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        transform.parent.gameObject.GetComponent<CraterCreator>().OnCollision(collision);
+        Debug.Log("OnCollisionEnter2D");
+        gameObject.GetComponent<CraterCreator>().OnCollision(collision);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("OnCollisionEnter");
+        //transform.parent.gameObject.GetComponent<CraterCreator>().OnCollision(collision);
     }
 }
