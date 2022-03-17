@@ -8,6 +8,8 @@ public class CraterCreator : MonoBehaviour
 {
     public float mass = 1f;
     public float radius = 1f;
+    public float g = 9.8f;
+    public float dencity = 2600f;
 
     private MeshFilter meshFilter;
 
@@ -35,13 +37,17 @@ public class CraterCreator : MonoBehaviour
     {
     }
 
-    public void OnCollision(Collision2D collision)
+    public void OnCollision(Collision2D collision, GameObject impacter)
     {
         Debug.Log("Collision");
         Debug.Log("Enter " + collision.contacts[0].point.x + "    " + collision.contacts[0].point.y);
+        Asteroid asteroid = impacter.GetComponent<Asteroid>();
+        float impacterDensity = asteroid.density;
+        float impacterVelocity = asteroid.velocity;
+        float impacterRadius = asteroid.radius;
 
         Vector3 collision2DPoint = collision.contacts[0].point;
-        float craterDiametr = CalculationUtilsMath.CalculateCratetrRadius(17, 2600, 2600, 9.8f, 100);   // some formula incorrectness or misinterpretation in the source => radius = diametr
+        float craterDiametr = CalculationUtilsMath.CalculateCratetrRadius(impacterVelocity, impacterDensity, dencity, g, impacterRadius);   // some formula incorrectness or misinterpretation in the source => radius = diametr
         float craterDepth = 0.4f * craterDiametr;
         float scale = transform.localScale.x;
         Debug.Log(craterDiametr + " km");

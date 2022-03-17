@@ -6,5 +6,6 @@ public enum SpaceObjectType
 {
     Star,
     Planet,
-    Moon
+    Moon,
+    Asteroid
 }
