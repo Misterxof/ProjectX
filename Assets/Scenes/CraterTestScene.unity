@@ -272,10 +272,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1968314681082567340, guid: c2d154192b95a554cb1f1b23ddb9d6b8, type: 3}
       propertyPath: m_Name
-      value: Player 1
+      value: Asteroid
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2d154192b95a554cb1f1b23ddb9d6b8, type: 3}
+--- !u!1 &363770100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1968314681082567340, guid: c2d154192b95a554cb1f1b23ddb9d6b8, type: 3}
+  m_PrefabInstance: {fileID: 217495904}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &363770106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363770100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804c00b5d478bb744ac66e8003287d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 100
+  velocity: 17
+  density: 2600
+  spaceObjectType: 3
 --- !u!1 &420777809
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +476,7 @@ GameObject:
   - component: {fileID: 582392266}
   - component: {fileID: 582392267}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -542,6 +563,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 1
   radius: 1
+  g: 1
+  dencity: 2600
 --- !u!61 &582392267
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1611,6 +1634,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 1
   radius: 1
+  g: 1
+  dencity: 2600
 --- !u!114 &1529842886
 MonoBehaviour:
   m_ObjectHideFlags: 0
