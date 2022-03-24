@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class CalculationUtilsMath
 {
-    public static float G = 6.67408e-20f;   // km^3/kg s^2
+    public const float G = 6.67408e-20f;   // km^3/kg s^2
     //public static float G = 6.67408e-11f;   // m^3/kg s^2
     //public static float G = 0.0001f;
     //public static float G = 0.0006674f;
@@ -25,7 +25,11 @@ public static class CalculationUtilsMath
 
     public static float CalculateSphereOfInfluence(float r, float m, float M)
     {
-        float result = r * Mathf.Pow((m / M), (2f / 5f));
+        float result = r * Mathf.Pow((m / M), (2f / 5f)) / 1000;
+
+        if (result > 9999)  // for scaling
+            result = result / 15;
+        
         return result;
     }
 

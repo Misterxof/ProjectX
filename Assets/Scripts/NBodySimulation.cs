@@ -17,6 +17,7 @@ public class NBodySimulation : MonoBehaviour
 
     private void Start()
     {
+        // find central object - star
         for (int i = 0; i < bodies.Length; i++)
         {
             if (bodies[i].spaceObjectType == SpaceObjectType.Star)
@@ -26,12 +27,13 @@ public class NBodySimulation : MonoBehaviour
             }
         }
 
+        // Calculate sphereOfInfluence of the planets
         for (int i = 0; i < bodies.Length; i++)
         {
             if (bodies[i].spaceObjectType == SpaceObjectType.Planet)
             {
                 float distance = ((star.Position - bodies[i].Position) * 10000).magnitude;
-                float sphereOfInfluence = CalculationUtilsMath.CalculateSphereOfInfluence(distance, bodies[i].mass, star.mass) / 1000;
+                float sphereOfInfluence = CalculationUtilsMath.CalculateSphereOfInfluence(distance, bodies[i].mass, star.mass) * ConstantsUtils.INFLUENNCE_SPHERE_MODIFICATOR;
                 bodies[i].sphereOfInfluence = sphereOfInfluence;
                 GameObject influenseSphere = new GameObject("Influense Sphere");
                 influenseSphere.transform.position = bodies[i].Position;
