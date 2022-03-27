@@ -119,10 +119,12 @@ MonoBehaviour:
   surfaceGravity: 20
   initialVelocity: {x: 0, y: 131.5, z: 0}
   bodyName: Jupiter
+  acceleration: {x: 0, y: 0, z: 0}
   mass: 1.3415925e+25
   sphereOfInfluence: 0
   spaceObjectType: 0
   influenseSphere: {fileID: 0}
+  influenceSphereCelestialBody: {fileID: 0}
 --- !u!114 &6570708469381286098
 MonoBehaviour:
   m_ObjectHideFlags: 0

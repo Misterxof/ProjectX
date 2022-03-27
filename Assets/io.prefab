@@ -119,10 +119,12 @@ MonoBehaviour:
   surfaceGravity: 1
   initialVelocity: {x: 0, y: 24.3, z: 0}
   bodyName: io
+  acceleration: {x: 0, y: 0, z: 0}
   mass: 4.9630808e+20
   sphereOfInfluence: 0
   spaceObjectType: 0
   influenseSphere: {fileID: 0}
+  influenceSphereCelestialBody: {fileID: 0}
 --- !u!114 &131692670045754477
 MonoBehaviour:
   m_ObjectHideFlags: 0

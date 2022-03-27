@@ -132,15 +132,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2113065062394040093, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2113065062394040093, guid: a87df8e04db82db4b952de8975193b38, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2113065062394040093, guid: a87df8e04db82db4b952de8975193b38, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2113065062394040093, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14985
+      value: 12159
       objectReference: {fileID: 0}
     - target: {fileID: 2113065062394040093, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -835
       objectReference: {fileID: 0}
     - target: {fileID: 2113065062394040093, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: m_LocalPosition.z
@@ -184,23 +192,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5615607589378437534, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: mass
-      value: 0
+      value: 1.4983338e+15
       objectReference: {fileID: 0}
     - target: {fileID: 5615607589378437534, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: radius
-      value: 500
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5615607589378437534, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: surfaceGravity
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5615607589378437534, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: spaceObjectType
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5615607589378437534, guid: a87df8e04db82db4b952de8975193b38, type: 3}
+      propertyPath: initialVelocity.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5615607589378437534, guid: a87df8e04db82db4b952de8975193b38, type: 3}
       propertyPath: initialVelocity.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5615607589378437535, guid: a87df8e04db82db4b952de8975193b38, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a87df8e04db82db4b952de8975193b38, type: 3}
@@ -335,7 +351,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3952.0254
+  orthographic size: 800
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -588,10 +604,12 @@ MonoBehaviour:
   surfaceGravity: 274
   initialVelocity: {x: 0, y: 0, z: 0}
   bodyName: Sun
+  acceleration: {x: 0, y: 0, z: 0}
   mass: 1.985939e+30
   sphereOfInfluence: 0
   spaceObjectType: 0
   influenseSphere: {fileID: 0}
+  influenceSphereCelestialBody: {fileID: 0}
 --- !u!54 &793892574
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -617,7 +635,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5818008755460711423, guid: 8816ee09dc5f3fc4b8f8572c6c75930a, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5818008755460711423, guid: 8816ee09dc5f3fc4b8f8572c6c75930a, type: 3}
       propertyPath: m_LocalScale.x
@@ -806,6 +824,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 131692670045754478, guid: e0527c73538a4df4ab9c4bbbb858a1c9, type: 3}
+      propertyPath: initialVelocity.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 131692670045754478, guid: e0527c73538a4df4ab9c4bbbb858a1c9, type: 3}
       propertyPath: initialVelocity.y
       value: 0.11
       objectReference: {fileID: 0}
@@ -865,7 +887,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1650383371
 MonoBehaviour:
@@ -892,7 +914,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3575371984434353921, guid: a6869ce326e72a34f8534f172587dd8e, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3575371984434353921, guid: a6869ce326e72a34f8534f172587dd8e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -938,6 +960,10 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6999717261862348297, guid: a6869ce326e72a34f8534f172587dd8e, type: 3}
+      propertyPath: m_Constraints
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6999717261862348299, guid: a6869ce326e72a34f8534f172587dd8e, type: 3}
       propertyPath: mass
       value: 5.9600496e+24
@@ -977,10 +1003,12 @@ MonoBehaviour:
   surfaceGravity: 3.7
   initialVelocity: {x: 0, y: 0.47, z: 0}
   bodyName: Mercury
+  acceleration: {x: 0, y: 0, z: 0}
   mass: 3.297873e+23
   sphereOfInfluence: 0
   spaceObjectType: 1
   influenseSphere: {fileID: 0}
+  influenceSphereCelestialBody: {fileID: 0}
 --- !u!114 &1955305931
 MonoBehaviour:
   m_ObjectHideFlags: 0
