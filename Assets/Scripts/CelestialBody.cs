@@ -61,17 +61,20 @@ public class CelestialBody : GravityObject
         isStarted = true;
         if (spaceObjectType == SpaceObjectType.Planet || spaceObjectType == SpaceObjectType.Moon)
         {
-            GameObject completetPathGameObject2 = new GameObject("Complete Path");
-            completetPathGameObject2.transform.parent = transform;
-            completetPathGameObject2.AddComponent<LineRenderer>();
+            completetPathGameObject = new GameObject("Complete Path");
+            completetPathGameObject.transform.parent = transform;
+            completetPathGameObject.AddComponent<LineRenderer>();
             //complitePath = completetPathGameObject.GetComponent<LineRenderer>();
-            completetPathGameObject2.GetComponent<LineRenderer>().enabled = true;
-            completetPathGameObject2.GetComponent<LineRenderer>().positionCount = 100000;
-            completetPathGameObject2.GetComponent<LineRenderer>().startColor = gameObject.GetComponent<SpriteRenderer>().color;
-            completetPathGameObject2.GetComponent<LineRenderer>().endColor = gameObject.GetComponent<SpriteRenderer>().color;
+            completetPathGameObject.GetComponent<LineRenderer>().enabled = true;
+            completetPathGameObject.GetComponent<LineRenderer>().positionCount = 0;
+            completetPathGameObject.GetComponent<LineRenderer>().startColor = gameObject.GetComponentInChildren<SpriteRenderer>().color;
+            completetPathGameObject.GetComponent<LineRenderer>().endColor = gameObject.GetComponentInChildren<SpriteRenderer>().color;
+            //completetPathGameObject.GetComponent<LineRenderer>().material = Resources.Load<Material>("Resources/unity_builtin_extra/Default-Line");
+            completetPathGameObject.GetComponent<LineRenderer>().material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+            completetPathGameObject.GetComponent<LineRenderer>().material.color = gameObject.GetComponentInChildren<SpriteRenderer>().color;
             //Debug.Log("" + complitePath.startColor.ToString());
-            completetPathGameObject2.GetComponent<LineRenderer>().widthMultiplier = 100;
-            this.completetPathGameObject = completetPathGameObject2;
+            completetPathGameObject.GetComponent<LineRenderer>().widthMultiplier = 100;
+            //this.completetPathGameObject = completetPathGameObject;
         }
        
     }
@@ -80,12 +83,14 @@ public class CelestialBody : GravityObject
     {
         if (!Application.isPlaying)
         {
-            DestroyImmediate(completetPathGameObject);  // for debug mode
+            DestroyImmediate(completetPathGameObject);  // for debug modert
         }
 
         if (Application.isPlaying && (spaceObjectType == SpaceObjectType.Planet || spaceObjectType == SpaceObjectType.Moon)) {
             Debug.Log(" " + isStarted + "  " + name + "  i = " + iteration);
+            completetPathGameObject.GetComponent<LineRenderer>().positionCount = iteration + 1;
             completetPathGameObject.GetComponent<LineRenderer>().SetPosition(iteration, this.transform.position);
+            Debug.Log(" " + completetPathGameObject.GetComponent<LineRenderer>().positionCount);
             iteration++;
         }
             
