@@ -124,6 +124,7 @@ MonoBehaviour:
   sphereOfInfluence: 0
   spaceObjectType: 0
   influenseSphere: {fileID: 0}
+  completetPathGameObject: {fileID: 0}
   influenceSphereCelestialBody: {fileID: 0}
 --- !u!114 &131692670045754477
 MonoBehaviour:

@@ -93,7 +93,7 @@ public class OrbitDebugDisplay : MonoBehaviour
                                 (virtualBodies[j].position.y < yPlus && virtualBodies[j].position.y > yMinus))
                             {
                                 virtualBodies[j].SetInfluenceSphereCelestialBody(virtualBodies[i]);
-                                Debug.Log("VIRTUAL BODY INFLUENCE " + virtualBodies[j].bodyName + " inside " + virtualBodies[i].bodyName);
+                                //Debug.Log("VIRTUAL BODY INFLUENCE " + virtualBodies[j].bodyName + " inside " + virtualBodies[i].bodyName);
                                 break;
                             }
                         }

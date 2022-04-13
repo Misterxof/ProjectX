@@ -32,7 +32,17 @@ public class CelestialBody : GravityObject
     public GameObject influenseSphere;
 
     [ReadOnly]
+    public GameObject completetPathGameObject;
+
+    [ReadOnly]
     public CelestialBody influenceSphereCelestialBody;
+
+    //[ReadOnly]
+    //public LineRenderer complitePath;
+
+    private int iteration = 0;
+
+    private bool isStarted = false;
 
     void Awake()
     {
@@ -44,6 +54,43 @@ public class CelestialBody : GravityObject
         //{
         //    mass = ((surfaceGravity / 1000) * radius * radius / CalculationUtilsMath.G);
         //}
+    }
+
+    private void Start()
+    {
+        isStarted = true;
+        if (spaceObjectType == SpaceObjectType.Planet || spaceObjectType == SpaceObjectType.Moon)
+        {
+            GameObject completetPathGameObject2 = new GameObject("Complete Path");
+            completetPathGameObject2.transform.parent = transform;
+            completetPathGameObject2.AddComponent<LineRenderer>();
+            //complitePath = completetPathGameObject.GetComponent<LineRenderer>();
+            completetPathGameObject2.GetComponent<LineRenderer>().enabled = true;
+            completetPathGameObject2.GetComponent<LineRenderer>().positionCount = 100000;
+            completetPathGameObject2.GetComponent<LineRenderer>().startColor = gameObject.GetComponent<SpriteRenderer>().color;
+            completetPathGameObject2.GetComponent<LineRenderer>().endColor = gameObject.GetComponent<SpriteRenderer>().color;
+            //Debug.Log("" + complitePath.startColor.ToString());
+            completetPathGameObject2.GetComponent<LineRenderer>().widthMultiplier = 100;
+            this.completetPathGameObject = completetPathGameObject2;
+        }
+       
+    }
+
+    private void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            DestroyImmediate(completetPathGameObject);  // for debug mode
+        }
+
+        if (Application.isPlaying && (spaceObjectType == SpaceObjectType.Planet || spaceObjectType == SpaceObjectType.Moon)) {
+            Debug.Log(" " + isStarted + "  " + name + "  i = " + iteration);
+            completetPathGameObject.GetComponent<LineRenderer>().SetPosition(iteration, this.transform.position);
+            iteration++;
+        }
+            
+
+      
     }
 
     public void UpdateVelocity(Vector3 acceleration, float timeStep)
@@ -83,6 +130,11 @@ public class CelestialBody : GravityObject
         //meshHolder = transform.GetChild(0);
        // meshHolder.localScale = Vector3.one * radius;
         gameObject.name = bodyName;
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(completetPathGameObject);
     }
 
     public Rigidbody Rigidbody

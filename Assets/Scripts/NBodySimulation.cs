@@ -48,39 +48,7 @@ public class NBodySimulation : MonoBehaviour
             }
         }
 
-        // Set SetInfluenceSphereCelestialBody of the planets
-        for (int i = 0; i < bodies.Length; i++)
-        {
-            if (bodies[i].spaceObjectType == SpaceObjectType.Planet || bodies[i].spaceObjectType == SpaceObjectType.Moon)
-            {
-                float xPlus = bodies[i].Position.x + bodies[i].sphereOfInfluence;
-                float xMinus = bodies[i].Position.x - bodies[i].sphereOfInfluence;
-                float yPlus = bodies[i].Position.y + bodies[i].sphereOfInfluence;
-                float yMinus = bodies[i].Position.y - bodies[i].sphereOfInfluence;
-
-                //Debug.Log(virtualBodies[i].bodyName + " X- " + xMinus + " :  X+ " + xPlus + "   Y- " + yMinus + " :  Y+ " + yPlus);
-
-                if (bodies[i].spaceObjectType == SpaceObjectType.Planet)
-                {
-                    for (int j = 0; j < bodies.Length; j++)
-                    {
-                        if (bodies[i] != bodies[j])
-                        {
-                            //Debug.Log(virtualBodies[j].bodyName + " P X " + virtualBodies[j].position.x + " :  " + virtualBodies[j].position.y);
-                            if ((bodies[j].Position.x < xPlus && bodies[j].Position.x > xMinus) &&
-                                (bodies[j].Position.y < yPlus && bodies[j].Position.y > yMinus))
-                            {
-                                bodies[j].SetInfluenceSphereCelestialBody(bodies[i]);
-                                Debug.Log("VIRTUAL BODY INFLUENCE " + bodies[j].bodyName + " inside " + bodies[i].bodyName);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                //Debug.Log(virtualBodies[i].bodyName + " SOI = " + virtualBodies[i].sphereOfInfluence);
-            }
-        }
+        SetCurrentInfluenceSphereCelestialBody();
     }
 
     void FixedUpdate()
@@ -98,6 +66,11 @@ public class NBodySimulation : MonoBehaviour
            // bodies[i].influenseSphere.transform.position = bodies[i].Position;
         }
 
+    }
+
+    private void Update()
+    {
+        SetCurrentInfluenceSphereCelestialBody();
     }
 
     public static Vector3 CalculateAcceleration(CelestialBody point, CelestialBody[] bodies)
@@ -136,6 +109,43 @@ public class NBodySimulation : MonoBehaviour
         }
 
         return acceleration;
+    }
+
+    public void SetCurrentInfluenceSphereCelestialBody()
+    {
+        // Set SetInfluenceSphereCelestialBody of the planets
+        for (int i = 0; i < bodies.Length; i++)
+        {
+            if (bodies[i].spaceObjectType == SpaceObjectType.Planet || bodies[i].spaceObjectType == SpaceObjectType.Moon)
+            {
+                float xPlus = bodies[i].Position.x + bodies[i].sphereOfInfluence;
+                float xMinus = bodies[i].Position.x - bodies[i].sphereOfInfluence;
+                float yPlus = bodies[i].Position.y + bodies[i].sphereOfInfluence;
+                float yMinus = bodies[i].Position.y - bodies[i].sphereOfInfluence;
+
+                //Debug.Log(virtualBodies[i].bodyName + " X- " + xMinus + " :  X+ " + xPlus + "   Y- " + yMinus + " :  Y+ " + yPlus);
+
+                if (bodies[i].spaceObjectType == SpaceObjectType.Planet)
+                {
+                    for (int j = 0; j < bodies.Length; j++)
+                    {
+                        if (bodies[i] != bodies[j])
+                        {
+                            //Debug.Log(virtualBodies[j].bodyName + " P X " + virtualBodies[j].position.x + " :  " + virtualBodies[j].position.y);
+                            if ((bodies[j].Position.x < xPlus && bodies[j].Position.x > xMinus) &&
+                                (bodies[j].Position.y < yPlus && bodies[j].Position.y > yMinus))
+                            {
+                                bodies[j].SetInfluenceSphereCelestialBody(bodies[i]);
+                                //Debug.Log("VIRTUAL BODY INFLUENCE " + bodies[j].bodyName + " inside " + bodies[i].bodyName);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //Debug.Log(virtualBodies[i].bodyName + " SOI = " + virtualBodies[i].sphereOfInfluence);
+            }
+        }
     }
 
     public static CelestialBody[] Bodies
